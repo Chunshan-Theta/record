@@ -1,43 +1,19 @@
 import { LinguaRecorder } from './LinguaRecorder';
 
-function recognize(blob, listener) {
-  const xhr = new XMLHttpRequest();
-  xhr.onload = function(evt) {
-    const req = evt.target;
-    if(req.readyState === XMLHttpRequest.DONE && req.status === 200) {
-      console.log("speechToText#Result - 1: ", xhr.responseText);
-      const lines = xhr.responseText.split('\n');
-      const content = lines && lines.length > 1 ? lines[1]: undefined;
-      if (!content) {
-        if (listener) {
-          listener.onError(`沒有說話! responseText: ${xhr.responseText}`);
-        }
-        return;
-      }
+function audio2file(blob, listener) {
+    const anchor = document.createElement('a');
+    document.body.appendChild(anchor);
+    anchor.style = 'display: none';
+    const url = window.URL.createObjectURL(blob);
+    anchor.href = url;
+    anchor.download = 'audio.wav';
+    anchor.click();
+    window.URL.revokeObjectURL(url);
 
-      const resObject = JSON.parse(content);
-      console.log("speechToText#Result - resObject: ", resObject);
-      if (!resObject) {
-        if (listener) {
-          listener.onError("convert error");
-        }
-        return;
-      }
-
-      const text = resObject["result"][0]["alternative"][0]["transcript"];
-      console.log("speechToText#Result - 3: ", text);
-      if (listener && text) {
-        listener.onComplete(text);
-      }
-    }
-  };
-  const langs = {
-    zh_tw: "cmn-Hant-TW",
-    zh_cn: "cmn-Hans-CN",
-    en_US: "en-US"
-  }
-  xhr.open("POST",`https://speech.65lzg.com/v1/speech:recognize?lang=${langs["zh_tw"]}`);
-  xhr.send(blob);
+    //
+    console.log("speechToText#body - blob: ", blob);
+    console.log("speechToText#body - listener: ", listener);
+    listener.onComplete();
 }
 
 function createRecorder(listener) {
@@ -76,7 +52,7 @@ function record(listener) {
         listener.onStart();
       }
   }, onStop: (audioData) => {
-      recognize(audioData, listener);
+      audio2file(audioData, listener);
     }
   });
 }
