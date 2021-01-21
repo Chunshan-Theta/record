@@ -1,0 +1,46 @@
+.linear-layout-container {
+    width: 100%;
+    //min-height: 100px;
+    display: flex;
+    align-items: center;
+    overflow: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+.vertical {
+    flex-direction: column;
+}
+.space-between {
+    justify-content: space-between;
+}
+.space-around {
+    justify-content: space-around;
+}
+.space-evenly {
+    justify-content: space-evenly;
+}
+.center {
+    justify-content: center;
+}
+.left {
+    justify-content: flex-start;
+}
+.right {
+    justify-content: flex-end;
+}
+
+
+.center-vertical {
+    align-items: center;
+    justify-content: center;
+}
+.left-vertical {
+    align-items: flex-start;
+    justify-content: left;
+}
+.right-vertical {
+    align-items: flex-end;
+    justify-content: right;
+}
+
